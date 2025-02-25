@@ -1,0 +1,18 @@
+# Ignore system & personal files
+.bashrc
+.profile
+.python_version
+
+# Ignore SSH keys (Security risk)
+.ssh/
+
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+
+# Ignore backups and logs
+backups/
+logs/
+
+# Ignore sensitive files
+*.sql.gz
