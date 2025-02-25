@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #F0E68C;
+        }
+
+        img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        th, td {
+            border: 1px solid #FFD700;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333333;
+            color: #FFD700;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333333;
+        }
+
+        tr:hover {
+            background-color: #444444;
+            box-shadow: 0px 5px 10px rgba(255, 215, 0, 0.5);
+        }
+
+        a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .pdf-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pdf-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #F0E68C;
+            background-color: #333;
+            border: 1px solid #FFD700;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .pdf-button:hover {
+            background-color: #FFD700;
+            color: #121212;
+        }
+        .Hidden{
+             visibility: hidden;
+        }
+
+    </style>
+</head>
+<body>
+    <h2>Welcome, {{ student_name }}</h2>
+    <img src="{{ image_url }}" alt="Student Image">
+  <div class="pdf-links">
+       <a href="{{ url_for('syllabus_and_schedules') }}" class="pdf-button">Syllabus & Schedules</a>
+
+   
+    </div>
+
+  <h3>Subject Attendance</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Attendance Percentage</th>
+            <th>Exam/ Assignment</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for subject in subject_attendance %}
+        <tr>
+            <td>
+                <a href="{{ url_for('subject_attendance_page', rfid=session['rfid'], subject_id=subject.subject_id) }}">
+                    {{ subject.subject_name }}
+                </a>
+            </td>
+            <td>
+                {% if subject.attendance_percentage is not none %}
+                    {{ subject.attendance_percentage | round(1) }}%
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+           <td>
+    {% if subject.exam_pdf %}
+        <!-- Link to Exam Submission page -->
+        <a href="{{ url_for('exam_submission', exam_id=subject.exam_id) }}" target="_blank">View Exam/ Assignment</a>
+    {% else %}
+        Not Available
+    {% endif %}
+</td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+    <h3>General Attendance</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Total Attendance Percentage</th>
+                <th><a href="{{ url_for('general_attendance_page', rfid=session['rfid']) }}">View All Records</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{% if general_attendance_percentage is not none %}{{ general_attendance_percentage | round(1) }}{% else %}N/A{% endif %}%</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Assessments</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Assessment Type</th>
+                <th>View Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assessment_type in assessment_types %}
+            <tr>
+                <td>{{ assessment_type }}</td>
+                <td><a href="{{ url_for('assessment_details', assessment_type=assessment_type) }}">View Details</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</br>
+  
+</br>
+
+<h6 class="Hidden">.</h6>
+</body>
+</html>

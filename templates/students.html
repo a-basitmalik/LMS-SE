@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        /* Watermark styling */
+        .watermark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+<!--            background-image: url('/static/images/Logo3.png');-->
+            background-repeat: no-repeat;
+            background-size: contain; /* Adjust size to fit well */
+            background-position: center center;
+            opacity: 0.1; /* Adjust opacity as needed */
+            z-index: 1; /* Ensure it's behind other content */
+        }
+
+        header {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            width: 100%;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+        .FooterText{
+       position: fixed;
+            bottom: 25px; /* Adjust this value to set the margin from the bottom */
+            right: 250px; /* Adjust this value to set the margin from the right */
+        }
+         .footer-logo {
+            position: fixed;
+            bottom: 0px; /* Adjust this value to set the margin from the bottom */
+            right: 10px; /* Adjust this value to set the margin from the right */
+            z-index: 10;
+            color: #F0E68C;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        .footer-logo img {
+            height: 70px; /* Adjust the height of the logo image as needed */
+            margin-left: 5px;
+        }
+
+        .menu-bar {
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .menu-bar a {
+            margin: 10px 5px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #FFD700;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .menu-bar a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #FFD700;
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        .menu-bar a:hover {
+            color: #FFC200;
+        }
+
+        .menu-bar a:hover::after {
+            width: 100%;
+        }
+
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px #000000;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        th, td {
+            border: 1px solid #ffd700;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333333;
+            color: #ffd700;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333333;
+        }
+
+        tr:hover {
+            background-color: #444444;
+            box-shadow: 0px 5px 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .search-form {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-form input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ffd700;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #ffc200;
+        }
+    </style>
+</head>
+<body>
+<header>
+        <div class="menu-bar">
+            <a href="/general_attendance">General Attendance</a>
+            <a href="/subject_attendance">Subject Attendance</a>
+            <a href="/bunk">Bunk Records</a>
+            <a href="/students">Students</a>
+            <a href="/employees">Employees</a>
+            <a href="/subjects">Subjects</a>
+            <a href="/mark_general_attendance">Mark General Attendance</a>
+            <a href="/mark_subject_attendance">Mark Subject Attendance</a>
+            <a href="/login">Login</a>
+            <a href="/register_student">Register Student</a>
+            <a href="/enroll">Enroll Subjects</a>
+        </div>
+    </header>
+    <h1>Students</h1>
+
+    <!-- Search Form -->
+    <div class="search-form">
+        <input type="text" id="rfid-input" placeholder="Enter RFID" autofocus onkeypress="handleKeyPress(event)">
+        <button onclick="searchRFID()">Search</button>
+    </div>
+
+    <!-- Student Table -->
+    <table>
+        <thead>
+            <tr>
+
+                <th>RFID</th>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Student Phone Number</th>
+                <th>Days Attended</th>
+                <th>Total Days</th>
+                <th>Fine</th>
+
+            </tr>
+        </thead>
+        <tbody id="student-table-body">
+            {% for student in student_data %}
+            <tr>
+                <td>{{ student[0] }}</td>
+                <td>{{ student[8] }}</td>
+                <td>{{ student[1] }}</td>
+                <td>{{ student[2] }}</td>
+                <td>{{ student[4] }}</td>
+                <td>{{ student[6] }}</td>
+                <td>{{ student[7] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function searchRFID() {
+            const rfid = document.getElementById('rfid-input').value;
+            fetch(`/search_students?rfid=${rfid}`)
+                .then(response => response.json())
+                .then(data => {
+                    populateTable(data);
+                })
+                .catch(error => console.error('Error fetching student records:', error));
+            document.getElementById('rfid-input').value = ''; // Emptying the search bar
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+            event.preventDefault();
+               searchRFID();
+            }
+        }
+
+        function populateTable(data) {
+            const tableBody = document.getElementById('student-table-body');
+            tableBody.innerHTML = '';
+            data.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student[0]}</td>
+                    <td>${student[8]}</td>
+                    <td>${student[1]}</td>
+                     <td>${student[2]}</td>
+                    <td>${student[4]}</td>
+                    <td>${student[6]}</td>
+                    <td>${student[7]}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>

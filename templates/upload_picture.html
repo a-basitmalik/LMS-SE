@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Student Picture</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            background-color: #333333;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+
+        h2 {
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #F0E68C;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background-color: #444444;
+            color: #F0E68C;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #FFD700;
+            color: black;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FFC200;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Student Picture</h2>
+        <form action="{{ url_for('upload_picture') }}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="rfid">RFID:</label>
+                <input type="text" id="rfid" name="rfid" required>
+            </div>
+            <div class="form-group">
+                <label for="picture">Select Picture:</label>
+                <input type="file" id="picture" name="picture" accept="image/*" required>
+            </div>
+            <button type="submit">Upload Picture</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absentees List</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            position: relative; /* For watermark positioning */
+<!--            overflow: hidden; /* Hide overflow from watermark */-->
+        }
+
+        .watermark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/static/images/Watermark.png'); /* Set your watermark image path here */
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center center;
+            opacity: 0.1; /* Adjust opacity as needed */
+            z-index: 1; /* Ensure it's behind other content */
+        }
+
+        header {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            width: 100%;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-bar {
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .menu-bar a {
+            margin: 10px 5px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #FFD700;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .menu-bar a:hover {
+            color: #FFC200;
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 100px auto 20px; /* Adjust margin for menu height */
+            border-radius: 10px;
+            background-color: rgba(51, 51, 51, 0.8); /* Semi-transparent background */
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            color: #F0E68C;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px; /* Space below form */
+        }
+
+        input[type="date"] {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #F0E68C;
+            border-radius: 5px;
+            background-color: #333;
+            color: #F0E68C;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #F0E68C;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #FFD700;
+            color: #121212;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            z-index: 3; /* Ensure table is above watermark */
+        }
+
+        th, td {
+            border: 1px solid #F0E68C;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+         .FooterText {
+            position: fixed;
+            bottom: 25px;
+            right: 250px;
+        }
+
+        .footer-logo {
+            position: fixed;
+            bottom: 10px; /* Adjust this value to set the margin from the bottom */
+            right: 10px; /* Adjust this value to set the margin from the right */
+            z-index: 10;
+            color: #F0E68C;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        .footer-logo img {
+            height: 70px; /* Adjust the height of the logo image as needed */
+            margin-left: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .menu-bar {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .menu-bar a {
+                margin: 5px 0;
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="watermark"></div> <!-- Watermark element -->
+
+    <header>
+        <div class="menu-bar">
+            <a href="/general_attendance">General Attendance</a>
+            <a href="/subject_attendance">Subject Attendance</a>
+            <a href="/bunk">Bunk Records</a>
+            <a href="/students">Students</a>
+            <a href="/employees">Employees</a>
+            <a href="/subjects">Subjects</a>
+            <a href="/mark_general_attendance">Mark General Attendance</a>
+            <a href="/mark_subject_attendance">Mark Subject Attendance</a>
+            <a href="/login">Login</a>
+            <a href="/register_student">Register Student</a>
+            <a href="/enroll">Enroll Subjects</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Absentees List</h1>
+        <form method="POST" action="{{ url_for('absentees_list') }}">
+    <label for="date">Select Date:</label>
+    <input type="date" id="date" name="date" value="{{ selected_date }}">
+    <button type="submit" name="action" value="generate">Generate Absentees List</button>
+            </br>
+    <button type="submit" name="action" value="mark_absent">Mark Absent</button>
+</form>
+        <form method="POST" action="{{ url_for('export_to_excel') }}">
+    <button type="submit">Export to Excel</button>
+</form>
+
+
+
+        <table>
+            <tr>
+                <th>Student Name</th>
+                <th>RFID</th>
+                <th>Absentee ID</th>
+            </tr>
+            {% for absentee in absentees %}
+            <tr>
+                <td>{{ absentee.student_name }}</td>
+                <td>{{ absentee.RFID }}</td>
+                <td>{{ absentee.AbsenteeID }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3">No absentees found for this date.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="footer-logo">
+        <img src="/static/images/Logo2.png" alt="Powered by Logo">
+    </div>
+</body>
+</html>

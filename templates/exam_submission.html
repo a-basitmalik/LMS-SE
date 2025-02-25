@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Submission</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #f4c542;
+            padding-top: 20px;
+            font-size: 2.5rem;
+        }
+
+        /* Container for all content */
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Styling for the countdown timer */
+        #countdown {
+            font-size: 30px;
+            font-weight: bold;
+            color: #f4c542;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Styling for form */
+        .form-container {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            margin-top: 30px;
+        }
+
+        .form-container label {
+            color: #f4c542;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .form-container input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #f4c542;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #f4c542;
+            border: none;
+            color: #1a1a1a;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background-color: #e0a829;
+        }
+
+        /* Styling for the PDF preview */
+        .pdf-preview {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* Responsive styling */
+        @media screen and (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .form-container input[type="file"], .form-container button {
+                font-size: 1rem;
+            }
+
+            .pdf-preview embed {
+                width: 100%;
+                height: 400px;
+            }
+        }
+
+        /* Styling for Exam ID and Current Time */
+        .exam-info {
+            text-align: center;
+            color: #f4c542;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        /* Center the current time */
+        #current-time {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Exam Submission</h1>
+
+        <!-- Exam Info -->
+        <div class="exam-info">
+
+            <p>Exam End Time: {{ exam_end_time }}</p>
+      
+        </div>
+
+        <!-- Countdown Timer -->
+        <div id="countdown"></div>
+
+        <!-- Form to Submit Solution -->
+        <div class="form-container">
+            <form action="{{ url_for('submit_solution', exam_id=exam_id) }}" method="POST" enctype="multipart/form-data">
+                <label for="solution">Upload your solution (PDF):</label>
+                <input type="file" name="solution" accept=".pdf" required>
+                <button type="submit">Submit Solution</button>
+            </form>
+        </div>
+
+        <!-- PDF of the Exam -->
+        <div class="pdf-preview">
+            <embed src="{{ url_for('static', filename='images/' + exam_pdf) }}" width="1250" height="500" type="application/pdf">
+        </div>
+    </div>
+
+    <script>
+        // Ensure exam_end_time is in a correct JavaScript-compatible format
+        var countdownDate = new Date("{{ exam_end_time|tojson }}").getTime(); // Ensure it's in a valid JS Date format
+
+        // Display current time
+        document.getElementById("current-time").innerText = new Date().toLocaleString(); // Current time displayed in human-readable format
+
+        // Countdown Timer Logic
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countdownDate - now;
+
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+
+            // If countdown finishes
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "EXPIRED";
+            }
+        }, 1000);
+    </script>
+
+</body>
+</html>

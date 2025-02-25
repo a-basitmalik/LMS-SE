@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result Students</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(51, 51, 51, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            color: #F0E68C;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #FFD700;
+            text-align: left;
+        }
+
+        th {
+            color: #FFD700;
+        }
+
+        button {
+            background-color: #FFD700;
+            color: #121212;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #F0E68C;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Students in Campus</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                  	<th>Year</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.rfid }}</td>
+                    <td>{{ student.Student_Name }}</td>
+                  <td>{{ student.year }}</td>
+                    <td>
+                         <a href="{{ url_for('view_student_assessment_details', student_id=student.rfid) }}">
+                           
+        <button>View Monthly Result</button>
+                          
+                           
+    </a>
+                      <a href="{{ url_for('view_student_assessment_details_send_up', student_id=student.rfid) }}">
+        <button>View Send Up Result</button>
+                           
+    </a>
+                      
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

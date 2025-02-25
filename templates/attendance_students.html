@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Students</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(51, 51, 51, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            color: #F0E68C;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #FFD700;
+            text-align: left;
+        }
+
+        th {
+            color: #FFD700;
+        }
+
+        .present {
+            color: #00FF00;
+        }
+
+        .absent {
+            color: #FF0000;
+        }
+
+        .leave {
+            color: #1E90FF;
+        }
+
+        .no-status {
+            color: #FFFFFF;
+        }
+
+        .summary-box {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+
+        .summary-box div {
+            text-align: center;
+            font-size: 18px;
+        }
+
+        select {
+            background-color: #333;
+            color: #F0E68C;
+            padding: 5px;
+            border: 1px solid #FFD700;
+            border-radius: 5px;
+        }
+
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #FFD700;
+            color: #121212;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0px 5px 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .floating-button:hover {
+            background-color: #F0E68C;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Attendance - All Students</h1>
+      
+        <div class="summary-box">
+            <div>Total Present: {{ total_present }}</div>
+            <div>Total Absent: {{ total_absent }}</div>
+            <div>Total Leave: {{ total_leave }}</div>
+            <div>No Status: {{ total_no_status }}</div>
+        </div>
+        <form action="{{ url_for('update_all_attendance') }}" method="POST">
+          
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Student Name</th>
+                        <th>Current Status</th>
+                        <th>New Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ student.rfid }}</td>
+                        <td>{{ student.Student_Name }}</td>
+                        <td class="{% if student.Status == 'Present' %}present{% elif student.Status == 'Absent' %}absent{% elif student.Status == 'Leave' %}leave{% else %}no-status{% endif %}">
+                            {{ student.Status or 'No Status' }}
+                        </td>
+                        <td>
+    <select name="status_{{ student.rfid }}">
+        <option value="Present" {% if student.Status == 'Present' %}selected{% endif %}>Present</option>
+        <option value="Absent" {% if student.Status == 'Absent' or not student.Status %}selected{% endif %}>Absent</option>
+        <option value="Leave" {% if student.Status == 'Leave' %}selected{% endif %}>Leave</option>
+    </select>
+    <input type="hidden" name="current_status_{{ student.rfid }}" value="{{ student.Status }}">
+</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          <input type="hidden" name="campus_id" value="{{ campus_id }}">
+            <button type="submit" class="floating-button">Update All</button>
+        </form>
+    </div>
+</body>
+</html>

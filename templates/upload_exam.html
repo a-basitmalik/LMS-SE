@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Exam</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.13.18/jquery.timepicker.min.js"></script>
+    <style>
+        body {
+            background-color: #121212; /* Black background */
+            color: #f1c40f; /* Golden text */
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #333; /* Dark grey background for form */
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .form-container h1 {
+            color: #f1c40f; /* Golden header text */
+            text-align: center;
+            margin-bottom: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+        .form-container label,
+        .form-check-label {
+            color: #f1c40f; /* Golden text for labels */
+            font-size: 1.1rem;
+        }
+        .btn-primary {
+            background-color: #f1c40f; /* Golden button */
+            border-color: #f1c40f;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+        }
+        .btn-primary:hover {
+            background-color: #d4ac0d; /* Darker golden on hover */
+            border-color: #d4ac0d;
+        }
+        .form-control {
+            background-color: #444; /* Dark background for inputs */
+            color: #f1c40f; /* Golden text */
+            border: 1px solid #f1c40f; /* Golden border */
+        }
+        .form-control:focus {
+            background-color: #555; /* Darker background on focus */
+            border-color: #f39c12; /* Brighter gold on focus */
+            color: #f1c40f; /* Keep golden text */
+        }
+        .form-check-input {
+            background-color: #444;
+            border: 1px solid #f1c40f;
+        }
+        .form-check-input:checked {
+            background-color: #f1c40f;
+            border-color: #f1c40f;
+        }
+        .text-center {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Upload Exam</h1>
+        <form action="{{ url_for('upload_exam', campus_id=campus_id) }}" method="POST" enctype="multipart/form-data">
+            <!-- Select Subject -->
+            <div class="mb-3">
+                <label for="subject" class="form-label">Select Subject:</label>
+            </div>
+
+            <!-- Upload Exam PDF -->
+            <div class="mb-3">
+                <label for="exam_pdf" class="form-label">Upload Exam PDF:</label>
+                <input type="file" class="form-control" id="exam_pdf" name="exam_pdf" accept=".pdf" required>
+            </div>
+
+            <!-- Start Date & Time -->
+            <div class="mb-3">
+                <label for="start_time" class="form-label">Start Date & Time:</label>
+                <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
+            </div>
+
+            <!-- End Date & Time -->
+            <div class="mb-3">
+                <label for="end_time" class="form-label">End Date & Time:</label>
+                <input type="datetime-local" class="form-control" id="end_time" name="end_time" required>
+            </div>
+
+            <!-- Subjects List -->
+            <div class="mb-3">
+                {% for subject in subjects %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="subject_id" id="subject{{ subject.Subject_id }}" value="{{ subject.Subject_id }}" required>
+                        <label class="form-check-label" for="subject{{ subject.Subject_id }}">
+                            {{ subject.Subject_Name }} ({{ subject.year }})
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Upload Exam</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

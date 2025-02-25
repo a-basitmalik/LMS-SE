@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Assessment Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #FFD700;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        th, td {
+            border: 1px solid #FFD700;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333333;
+            color: #FFD700;
+        }
+
+        tr:nth-child(even) {
+            background-color: #444444;
+        }
+
+        tr:hover {
+            background-color: #555555;
+        }
+    </style>
+</head>
+<body>
+    <h2>Monthly Assessment Details for Subject ID: {{ subject_id }}</h2>
+
+    {% for (month_name, year), records in assessments.items() %}
+        <h3>{{ month_name }}, {{ year }}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Weekly 1</th>
+                    <th>Weekly 2</th>
+                    <th>Weekly 3</th>
+                    <th>Average Weekly Marks</th>
+                    <th>Monthly Marks</th>
+                    <th>Total Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rfid, data in records.items() %}
+                <tr>
+                    <td>{{ data.student_name }}</td>
+                    <td>{{ data.quizzes.Quiz1 }}</td>
+                    <td>{{ data.quizzes.Quiz2 }}</td>
+                    <td>{{ data.quizzes.Quiz3 }}</td>
+                    <td>
+                        {% if data.quizzes.Quiz1 != 'NA' and data.quizzes.Quiz2 != 'NA' and data.quizzes.Quiz3 != 'NA' %}
+                            {{ ((data.quizzes.Quiz1 + data.quizzes.Quiz2 + data.quizzes.Quiz3) / 3) | round(1) }}
+                        {% else %}
+                            NA
+                        {% endif %}
+                    </td>
+                    <td>{{ data.monthly_marks | round(1) if data.monthly_marks != 'NA' else 'NA' }}</td>
+                    <td>{{ data.total_marks | round(1) if data.total_marks != 'NA' else 'NA' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+</body>
+</html>

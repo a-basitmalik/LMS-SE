@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students of Campus {{ campus_id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #F0E68C;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #FFD700;
+            text-align: center; /* Center align text in table cells */
+        }
+
+        th {
+            color: #FFD700;
+            background-color: #333333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #444444;
+        }
+
+        tr:hover {
+            background-color: #555555;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .filter-button {
+            background-color: #FFD700;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .filter-button:hover {
+            background-color: #FFC107;
+        }
+    </style>
+</head>
+<body>
+    <h2>Students of Campus {{ campus_id }}</h2>
+
+    
+
+    <table id="studentsTable">
+        <thead>
+            <tr>
+                <th>RFID</th>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr class="student-row" data-year="{{ student['year'] }}">
+                <td>{{ student['rfid'] }}</td>
+                <td>{{ student['studentid'] }}</td>
+                <td>{{ student['student_name'] }}</td>
+                <td>{{ student['year'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function filterSubjects(year) {
+    const rows = document.querySelectorAll('#studentsTable .student-row');
+    
+    rows.forEach(row => {
+        if (year === 'all') {
+            row.style.display = '';
+        } else if (row.dataset.year === year) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+    </script>
+</body>
+</html>

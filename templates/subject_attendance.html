@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Attendance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px #000000;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        th, td {
+            border: 1px solid #ffd700;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333333;
+            color: #ffd700;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333333;
+        }
+
+        tr:hover {
+            background-color: #444444;
+            box-shadow: 0px 5px 10px rgba(255, 215, 0, 0.5);
+        }
+
+        .search-form {
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        /* Watermark styling */
+        .watermark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+<!--            background-image: url('/static/images/Logo3.png');-->
+            background-repeat: no-repeat;
+            background-size: contain; /* Adjust size to fit well */
+            background-position: center center;
+            opacity: 0.1; /* Adjust opacity as needed */
+            z-index: 1; /* Ensure it's behind other content */
+        }
+
+        header {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            width: 100%;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+        .FooterText{
+       position: fixed;
+            bottom: 25px; /* Adjust this value to set the margin from the bottom */
+            right: 250px; /* Adjust this value to set the margin from the right */
+        }
+         .footer-logo {
+            position: fixed;
+            bottom: 0px; /* Adjust this value to set the margin from the bottom */
+            right: 10px; /* Adjust this value to set the margin from the right */
+            z-index: 10;
+            color: #F0E68C;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        .footer-logo img {
+            height: 70px; /* Adjust the height of the logo image as needed */
+            margin-left: 5px;
+        }
+
+        .menu-bar {
+            display: flex;
+            justify-content: space-around;
+            max-width: 1200px;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .menu-bar a {
+            margin: 10px 5px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #FFD700;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .menu-bar a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: #FFD700;
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s ease;
+        }
+
+        .menu-bar a:hover {
+            color: #FFC200;
+        }
+
+        .menu-bar a:hover::after {
+            width: 100%;
+        }
+
+        .search-form input[type="text"],
+        .search-form input[type="date"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+        }
+
+        .search-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ffd700;
+            color: #1a1a1a;
+            cursor: pointer;
+        }
+
+        .search-form button:hover {
+            background-color: #ffc200;
+        }
+    </style>
+</head>
+<body>
+<header>
+        <div class="menu-bar">
+            <a href="/general_attendance">General Attendance</a>
+            <a href="/subject_attendance">Subject Attendance</a>
+            <a href="/bunk">Bunk Records</a>
+            <a href="/students">Students</a>
+            <a href="/employees">Employees</a>
+            <a href="/subjects">Subjects</a>
+            <a href="/mark_general_attendance">Mark General Attendance</a>
+            <a href="/mark_subject_attendance">Mark Subject Attendance</a>
+            <a href="/login">Login</a>
+            <a href="/register_student">Register Student</a>
+            <a href="/enroll">Enroll Subjects</a>
+        </div>
+    </header>
+    <h1>Subject Attendance</h1>
+
+    <!-- Search Form -->
+    <div class="search-form">
+        <input type="text" id="rfid-input" placeholder="Enter RFID" autofocus onkeypress="handleKeyPress(event)">
+        <input type="text" id="subject-id-input" placeholder="Enter Subject ID" onkeypress="handleKeyPress(event)">
+        <input type="date" id="start-date-input" placeholder="Start Date" onkeypress="handleKeyPress(event)">
+        <input type="date" id="end-date-input" placeholder="End Date" onkeypress="handleKeyPress(event)">
+        <button onclick="searchAttendance()">Search</button>
+        <button onclick="exportToExcel()">Export to Excel</button>
+    </div>
+
+    <!-- Attendance Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>RFID</th>
+                <th>Student Name</th>
+                <th>Subject Name</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody id="attendance-table-body">
+            {% for record in subject_attendance_data %}
+            <tr>
+                <td>{{ record[0] }}</td>
+                <td>{{ record[1] }}</td>
+                <td>{{ record[2] }}</td>
+                <td>{{ record[3] }}</td>
+                <td>{{ record[4] }}</td>
+                <td>{{ record[5] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function searchAttendance() {
+            const rfid = document.getElementById('rfid-input').value;
+            const subjectId = document.getElementById('subject-id-input').value;
+            const startDate = document.getElementById('start-date-input').value;
+            const endDate = document.getElementById('end-date-input').value;
+
+            fetch(`/search_subject_attendance?rfid=${rfid}&subject_id=${subjectId}&start_date=${startDate}&end_date=${endDate}`)
+                .then(response => response.json())
+                .then(data => {
+                    populateTable(data);
+                })
+                .catch(error => console.error('Error fetching subject attendance records:', error));
+            document.getElementById('rfid-input').value = ''; // Emptying the search bar
+            document.getElementById('subject-id-input').value = ''; // Emptying the search bar
+            document.getElementById('start-date-input').value = ''; // Emptying the search bar
+            document.getElementById('end-date-input').value = ''; // Emptying the search bar
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchAttendance();
+            }
+        }
+
+        function populateTable(data) {
+            const tableBody = document.getElementById('attendance-table-body');
+            tableBody.innerHTML = '';
+            data.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record[0]}</td>
+                    <td>${record[1]}</td>
+                    <td>${record[2]}</td>
+                    <td>${record[3]}</td>
+                    <td>${record[4]}</td>
+                    <td>${record[5]}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function exportToExcel() {
+            const rfid = document.getElementById('rfid-input').value;
+            const subjectId = document.getElementById('subject-id-input').value;
+            const startDate = document.getElementById('start-date-input').value;
+            const endDate = document.getElementById('end-date-input').value;
+
+            const url = `/export_subject_attendance?rfid=${rfid}&subject_id=${subjectId}&start_date=${startDate}&end_date=${endDate}`;
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marked Quizzes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: auto;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%; /* Changed to 90% for better mobile responsiveness */
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #333333;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            text-align: center;
+            color: #F0E68C;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #555;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333333;
+        }
+
+        tr:hover {
+            background-color: #444444;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px;
+            margin: 5px;
+            text-align: center;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 600px) {
+            table {
+                font-size: 14px; /* Smaller font size for smaller screens */
+            }
+
+            th, td {
+                padding: 10px; /* Increase padding for better touch targets */
+            }
+
+            .button {
+                padding: 8px; /* Adjust button size */
+                font-size: 12px; /* Smaller button font */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Marked Weeklies</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject Name</th>
+                    <th>Weekly Number</th>
+                    <th>Monthly Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for quiz in quizzes %}
+                <tr>
+                    <td>{{ quiz.subject_name }}</td>
+                    <td>{{ quiz.quiz_number }}</td>
+                    <td>{{ quiz.monthly_number }}</td>
+                    <td><a href="{{ url_for('view_quiz_marks', quiz_id=quiz.quiz_id) }}" class="button">View/Edit Student Marks</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

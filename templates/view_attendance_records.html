@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Attendance Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+        }
+        .table-container {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 90%; /* Make it responsive */
+            background-color: rgba(51, 51, 51, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #F0E68C;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #FFD700;
+            text-align: left;
+        }
+        th {
+            color: #FFD700;
+        }
+        a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #FFC200;
+        }
+        .Button {
+            background-color: #FFD700;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: #121212;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .Button:hover {
+            background-color: #FFC200;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            th, td {
+                padding: 8px;
+                font-size: 14px; /* Slightly smaller font size for mobile */
+            }
+            h1 {
+                font-size: 20px; /* Adjust heading size for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="table-container">
+    <h1>Attendance Records for Subject {{ subject_id }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Days Attended</th>
+                <th>Total Days</th>
+                <th>Attendance Percentage</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rfid, data in students.items() %}
+            <tr>
+                <td>{{ data['student_name'] }}</td>
+                <td>{{ data['DaysAttended'] }}</td>
+                <td>{{ data['TotalDays'] }}</td>
+                <td>{{ data['AttendancePercentage'] }}%</td>
+                <td>
+                    <a class="Button" href="{{ url_for('view_attendance', rfid=rfid, subject_id=subject_id) }}">View Records</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

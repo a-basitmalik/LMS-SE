@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #333;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #F0E68C;
+        }
+
+        img {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
+        .rfid {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+         .rfid-form input[type="text"], .rfid-form button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #FFD700;
+            color: #121212;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .rfid-form button:hover {
+            background-color: #FFC200;
+        }
+
+        .rfid-form input[type="text"] {
+            width: calc(100% - 40px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Subject Attendance</h1>
+        {% if student_name and image_url %}
+            <img src="{{ image_url }}" alt="Student Image">
+            <p>Name: {{ student_name }}</p>
+            <p class="rfid">RFID: {{ rfid }}</p>
+        {% else %}
+            <p>No student details found for RFID: {{ rfid }}</p>
+        {% endif %}
+
+        <div class="rfid-form">
+            <form id="rfid-form" action="/submit_subject_attendance" method="post">
+                <input type="text" id="rfid" name="rfid" placeholder="Enter RFID" required>
+                <button type="submit">Mark Attendance</button>
+            </form>
+        </div>
+    </div>
+
+
+<script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const rfidInput = document.getElementById('rfid');
+            rfidInput.focus();
+
+            rfidInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('rfid-form').submit();
+                }
+            });
+
+            document.getElementById('rfid-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const rfid = rfidInput.value;
+                const response = await fetch(`/api/get_student_info?rfid=${rfid}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('student-info').style.display = 'block';
+                    document.getElementById('student-picture').src = data.picture_url;
+                    document.getElementById('student-name').textContent = `Name: ${data.student_name}`;
+                    document.getElementById('attendance-time').textContent = `Attendance marked at: ${data.time}`;
+                } else {
+                    alert('RFID not recognized.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

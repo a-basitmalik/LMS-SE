@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Enrolled Subjects</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: rgba(51, 51, 51, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            color: #F0E68C;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #FFD700;
+            text-align: left;
+        }
+
+        th {
+            color: #FFD700;
+        }
+
+        .unenroll-button {
+            background-color: #FF6347;
+            color: #121212;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .enroll-button {
+            background-color: #32CD32;
+            color: #121212;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .unenroll-button:hover {
+            background-color: #FF4500;
+        }
+
+        .enroll-button:hover {
+            background-color: #228B22;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Enrolled Subjects</h1>
+
+        <h2>Enrolled Subjects</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject ID</th>
+                    <th>Subject Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in enrolled_subjects %}
+                <tr>
+                    <td>{{ subject.Subject_id }}</td>
+                    <td>{{ subject.Subject_Name }}</td>
+                    <td>
+                        <form action="{{ url_for('unenroll_subject', rfid=rfid, subject_id=subject.Subject_id) }}" method="POST">
+                            <button type="submit" class="unenroll-button">Unenroll</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Available Subjects</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject ID</th>
+                    <th>Subject Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in available_subjects %}
+                <tr>
+                    <td>{{ subject.Subject_id }}</td>
+                    <td>{{ subject.Subject_Name }}</td>
+                    <td>
+                        <form action="{{ url_for('enroll_subject', rfid=rfid, subject_id=subject.Subject_id) }}" method="POST">
+                            <button type="submit" class="enroll-button">Enroll</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

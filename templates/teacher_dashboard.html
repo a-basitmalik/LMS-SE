@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h2 {
+            text-align: center;
+            color: #F0E68C;
+            margin: 20px;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #333333;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .button {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            margin: 10px auto;
+            text-align: center;
+            color: #fff;
+            background-color: #007bff;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .subject-button {
+            display: block;
+            width: 300px;
+            padding: 10px;
+            margin: 10px auto;
+            text-align: center;
+            color: #fff;
+            background-color: #28a745;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .subject-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Welcome to Teacher Dashboard</h2>
+      {% for subject in subjects %}
+            <a href="{{ url_for('mark_subject_2attendance', subject_id=subject['subject_id']) }}" class="subject-button">
+                Mark Attendance
+            </a>
+        {% endfor %}
+        <a href="{{ url_for('make_assessment') }}" class="button">Make Assessment</a>
+        
+        <a href="{{ url_for('unmarked_assessments') }}" class="button">Unmarked Assessments</a>
+        <a href="{{ url_for('unmarked_quizzes') }}" class="button">Unmarked Weeklies</a>
+        <a href="{{ url_for('marked_assessments') }}" class="button">Marked Assessments</a>
+      	<a href="{{ url_for('marked_quizzes') }}" class="button">Marked Weeklies</a>
+      {% for subject in subjects %}
+        <a href="{{ url_for('view_submissions', subject_id=subject['subject_id']) }}" class="button">
+    View Submissions
+</a>
+      <a href="{{ url_for('subject_records', subject_id=subject['subject_id']) }}"class="subject-button">
+          View Attendance Records
+                </a>
+      
+                  
+      {% endfor %}
+    </div>
+</body>
+</html>

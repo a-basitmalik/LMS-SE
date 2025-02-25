@@ -1,0 +1,20 @@
+[0;1;32m●[0m app.service - Gunicorn instance to serve app
+     Loaded: loaded (/etc/systemd/system/app.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Fri 2024-08-30 22:48:18 UTC; 32s ago
+   Main PID: 58642 (gunicorn)
+      Tasks: 13 (limit: 19139)
+     Memory: 146.8M
+        CPU: 1.114s
+     CGroup: /system.slice/app.service
+             ├─58642 /home/nalexus/venv/bin/python3 /home/nalexus/venv/bin/gunicorn --workers 3 --bind unix:/home/nalexus/myapp.sock -m 007 app:app
+             ├─58643 /home/nalexus/venv/bin/python3 /home/nalexus/venv/bin/gunicorn --workers 3 --bind unix:/home/nalexus/myapp.sock -m 007 app:app
+             ├─58644 /home/nalexus/venv/bin/python3 /home/nalexus/venv/bin/gunicorn --workers 3 --bind unix:/home/nalexus/myapp.sock -m 007 app:app
+             └─58645 /home/nalexus/venv/bin/python3 /home/nalexus/venv/bin/gunicorn --workers 3 --bind unix:/home/nalexus/myapp.sock -m 007 app:app
+
+Aug 30 22:48:18 srv588794 systemd[1]: Started Gunicorn instance to serve app.
+Aug 30 22:48:18 srv588794 gunicorn[58642]: [2024-08-30 22:48:18 +0000] [58642] [INFO] Starting gunicorn 23.0.0
+Aug 30 22:48:18 srv588794 gunicorn[58642]: [2024-08-30 22:48:18 +0000] [58642] [INFO] Listening at: unix:/home/nalexus/myapp.sock (58642)
+Aug 30 22:48:18 srv588794 gunicorn[58642]: [2024-08-30 22:48:18 +0000] [58642] [INFO] Using worker: sync
+Aug 30 22:48:18 srv588794 gunicorn[58643]: [2024-08-30 22:48:18 +0000] [58643] [INFO] Booting worker with pid: 58643
+Aug 30 22:48:18 srv588794 gunicorn[58644]: [2024-08-30 22:48:18 +0000] [58644] [INFO] Booting worker with pid: 58644
+Aug 30 22:48:18 srv588794 gunicorn[58645]: [2024-08-30 22:48:18 +0000] [58645] [INFO] Booting worker with pid: 58645

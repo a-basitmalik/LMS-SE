@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #F0E68C;
+            margin: 20px 0 10px;
+        }
+
+        .table-container {
+            width: 90%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin: 20px 0;
+            border: 1px solid #FFD700;
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .month-section {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+            min-width: 600px;
+        }
+
+        th, td {
+            border: 1px solid #FFD700;
+            padding: 10px;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        th {
+            background-color: #333333;
+            color: #FFD700;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333333;
+        }
+
+        tr:hover {
+            background-color: #444444;
+            box-shadow: 0px 5px 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .table-container {
+                padding: 8px;
+            }
+
+            th, td {
+                padding: 8px;
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h2, h3 {
+                font-size: 1.2em;
+                margin: 15px 0 5px;
+            }
+
+            .table-container {
+                width: 100%;
+                padding: 5px;
+            }
+
+            table {
+                min-width: auto;
+                font-size: 0.75em;
+            }
+
+            th, td {
+                padding: 6px;
+                font-size: 0.7em;
+            }
+
+            /* Allow table to scroll horizontally on very small screens */
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>{{ assessment_type }} Assessments</h2>
+
+    {% if assessment_type == 'Monthly' %}
+        {% for month_year, data in assessments.items() %}
+            <h3>{{ data.MonthYear }}</h3>
+            <div class="month-section">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Weekly 1</th>
+                                <th>Weekly 2</th>
+                                <th>Weekly 3</th>
+                                <th>Average Weekly Marks</th>
+                                <th>Monthly Marks Achieved</th>
+                                <th>Total Marks Achieved</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in data.Records %}
+                            <tr>
+                                <td>{{ record.subject_name }}</td>
+                                <td>{{ record.QuizMarks.Quiz1 }}</td>
+                                <td>{{ record.QuizMarks.Quiz2 }}</td>
+                                <td>{{ record.QuizMarks.Quiz3 }}</td>
+                                <td>
+                                    {% if record.QuizMarks.Quiz1 != 'NA' and record.QuizMarks.Quiz2 != 'NA' and record.QuizMarks.Quiz3 != 'NA' %}
+                                        {{ ((record.QuizMarks.Quiz1 + record.QuizMarks.Quiz2 + record.QuizMarks.Quiz3) / 3) | round(1) }}
+                                    {% else %}
+                                        NA
+                                    {% endif %}
+                                </td>
+                                <td>{{ record.MonthlyMarks_Achieved | round(1) if record.MonthlyMarks_Achieved != 'NA' else 'NA' }}</td>
+                                <td>{{ record.TotalMarks_Achieved | round(1) if record.TotalMarks_Achieved != 'NA' else 'NA' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="table-container">
+            <table>
+    <thead>
+        <tr>
+            <th>Subject Name</th>
+            <th>Total Marks</th>
+            <th>Marks Achieved</th>
+            <th>Percentage Achieved</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for assessment in assessments %}
+        <tr>
+            <td>{{ assessment.subject_name }}</td>
+            <td>{{ assessment.total_marks }}</td>
+            <td>{{ assessment.Marks_Acheived }}</td>
+            <td>
+                {% if assessment.Marks_Acheived and assessment.total_marks %}
+                    {{ (assessment.Marks_Acheived / assessment.total_marks) * 100 | round(2) }}%
+                {% else %}
+                    0%
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+        </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Marks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #F0E68C;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; /* Changed to min-height for better layout */
+        }
+
+        .container {
+            width: 90%; /* Adjusted for better mobile responsiveness */
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #333333;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            text-align: center;
+            color: #F0E68C;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #555;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333333;
+        }
+
+        tr:hover {
+            background-color: #444444;
+        }
+
+        .update-form {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Aligns items to the start */
+        }
+
+        .update-form input[type="number"] {
+            margin-right: 10px;
+            padding: 5px;
+            width: 80px;
+            border: 1px solid #555;
+            border-radius: 4px;
+        }
+
+        .update-form button {
+            padding: 5px 10px;
+            background-color: #FFD700;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .update-form button:hover {
+            background-color: #FFC200;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 600px) {
+            th, td {
+                padding: 10px; /* Decrease padding for smaller screens */
+            }
+
+            .update-form input[type="number"] {
+                width: 60px; /* Adjust input width */
+            }
+
+            .update-form button {
+                padding: 4px 8px; /* Smaller button */
+                font-size: 12px; /* Smaller font size */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Marks for Assessment: {{ assessment.subject_name }} ({{ assessment.assessment_type }})</h2>
+
+        <h3>Assessment Marks</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Marks Achieved</th>
+                    <th>Edit Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mark in marks %}
+                <tr>
+                    <td>{{ mark.student_name }}</td>
+                    <td>{{ mark.Marks_Acheived }}</td>
+                    <td>
+                        <form class="update-form" action="/update_2marks" method="post">
+                            <input type="hidden" name="assessment_id" value="{{ assessment.assessment_id }}">
+                            <input type="hidden" name="rfid" value="{{ mark.rfid }}">
+                            <input type="number" name="new_marks" min="0" placeholder="New Marks" required>
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if quizzes %}
+        <div class="quizzes">
+            <h4>Quizzes for Monthly Assessment</h4>
+            <table class="quiz-table">
+                <thead>
+                    <tr>
+                        <th>Quiz Number</th>
+                        <th>Total Marks</th>
+                        <th>Marks Achieved</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for quiz in quizzes %}
+                    <tr>
+                        <td>Quiz {{ quiz.quiz_number }}</td>
+                        <td>{{ quiz.total_marks }}</td>
+                        <td>
+                            {% for student_mark in quiz_marks[quiz.quiz_id] %}
+                            <div>{{ student_mark.student_name }}: {{ student_mark.marks_achieved }}</div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
