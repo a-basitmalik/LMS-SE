@@ -16,7 +16,7 @@ from werkzeug.utils import secure_filename
 DB_CONFIG = {
     'host': '127.0.0.1',
     'user': 'rfid',
-    'password': 'TRY/One12',
+    'password': 'Here?You!Go1',
     'database': 'rfid',
     'port': 3306,  # Default MySQL port
     'charset': 'utf8mb4',  # Ensure charset is set to utf8mb4 for full Unicode support
